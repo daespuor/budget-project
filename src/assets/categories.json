@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "desc": "Fun"
+  },
+  {
+    "id": 1,
+    "desc": "Vacations"
+  },
+  {
+    "id": 2,
+    "desc": "Services"
+  },
+  {
+    "id": 3,
+    "desc": "Home"
+  },
+  {
+    "id": 4,
+    "desc": "Cats"
+  }
+]
