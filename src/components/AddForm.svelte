@@ -1,13 +1,27 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  export var serviceRecordMachine;
+  import { formRecordMachine } from "../machine/formRecordMachine";
+  import { interpret, assign } from "xstate";
+  var dispatch = createEventDispatcher();
   var selectedCategory = "0";
   var amount = 0.0;
-  $: if ($serviceRecordMachine.context.isCleaning) {
-    selectedCategory = "0";
-    amount = 0.0;
-    serviceRecordMachine.send("CLEANED");
-  }
+  var machineWithConfig = formRecordMachine.withConfig({
+    actions: {
+      setCategories: assign({
+        currentCategories: (_, evt) => evt.data.categories,
+      }),
+      reset: () => {
+        console.log("Cleaning");
+        selectedCategory = "0";
+        amount = 0.0;
+      },
+      updateRecords: (_, evt) => {
+        console.log("Updating");
+        dispatch("submit", evt.data.record);
+      },
+    },
+  });
+  var serviceRecordMachine = interpret(machineWithConfig).start();
   $: categories = $serviceRecordMachine.context.currentCategories;
   $: if (Number(selectedCategory) > 0 && Number(amount) > 0) {
     serviceRecordMachine.send("COMPLETED");
@@ -15,13 +29,15 @@
     serviceRecordMachine.send("INVALID");
   }
   var count = 0;
-  var dispatch = createEventDispatcher();
   function handleSubmit() {
     count++;
-    dispatch("submit", {
-      id: count,
-      category: selectedCategory,
-      amount: amount,
+    serviceRecordMachine.send({
+      type: "SUBMIT",
+      record: {
+        id: count,
+        category: selectedCategory,
+        amount: amount,
+      },
     });
   }
 
@@ -38,6 +54,7 @@
   <input bind:value={amount} />
   <button
     type="submit"
-    disabled={$serviceRecordMachine.value.form != "filledOut"}>Submit</button
+    disabled={$serviceRecordMachine.value["collecting data"] !=
+      "ready to submit"}>Submit</button
   >
 </form>

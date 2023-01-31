@@ -1,10 +1,10 @@
 <script>
   import categories from "../assets/categories.json";
-  export var serviceRecordMachine;
-  $: recordsFormated = $serviceRecordMachine.context.records.map((rec) => ({
-    ...rec,
-    category: categories.find((c) => c.id == rec.category)?.desc || "",
-  }));
+  //$: recordsFormated = $serviceRecordMachine.context.records.map((rec) => ({
+  //...rec,
+  //category: categories.find((c) => c.id == rec.category)?.desc || "",
+  //}));
+  var recordsFormated = [];
 </script>
 
 <table>
