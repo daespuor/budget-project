@@ -17,6 +17,7 @@
     "vite": "^4.0.0"
   },
   "dependencies": {
+    "@xstate/svelte": "^2.0.1",
     "xstate": "^4.35.2"
   }
 }

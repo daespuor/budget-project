@@ -1,15 +1,5 @@
 import { createMachine } from "xstate";
-import categories from "../assets/categories.json";
 
-function loadCategories() {
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      res({
-        categories,
-      });
-    }, 1000);
-  });
-}
 function saveRecord(_, evt) {
   return new Promise((res, rej) => {
     setTimeout(() => {
@@ -19,21 +9,8 @@ function saveRecord(_, evt) {
 }
 export var formRecordMachine = createMachine({
   id: "formRecord",
-  context: {
-    currentCategories: [],
-  },
-  initial: "loading",
+  initial: "collecting data",
   states: {
-    loading: {
-      invoke: {
-        id: "fetchCategories",
-        src: loadCategories,
-        onDone: {
-          actions: "setCategories",
-          target: "collecting data",
-        },
-      },
-    },
     "collecting data": {
       entry: "reset",
       initial: "filling fields",
